@@ -33,7 +33,7 @@ router.post('/registro', async (req, res) => {
 });
 
 router.post('/login', (req, res) => {
-    usuariosModel.getByUsername(req.body.username)
+    usuariosModel.getByUsername(req.body.usuario)
         .then((user) => {
             if (user == null) return res.json({ error: 'Usuario y o contraseña erroneos (1)' })
             bcrypt.compare(req.body.password, user.password, (err, same) => {
@@ -47,17 +47,17 @@ router.post('/login', (req, res) => {
         })
 });
 
-router.post('/loginv2', async (req, res) => {
-    try {
-        let user = await usuariosModel.getByUsername(req.body.username);
-        if (user == null) return res.json({ error: 'Usuario y o contraseña erroneos (1)' });
-        let same = bcrypt.compareSync(req.body.password, user.password);
-        if (!same) return res.json({ error: 'Usuario y o contraseña erroneos (2)' });
-        res.json({ success: 'Usuario correcto' });
-    } catch (err) {
-        res.json({ error: err })
-    }
-});
+// router.post('/loginv2', async (req, res) => {
+//     try {
+//         let user = await usuariosModel.getByUsername(req.body.username);
+//         if (user == null) return res.json({ error: 'Usuario y o contraseña erroneos (1)' });
+//         let same = bcrypt.compareSync(req.body.password, user.password);
+//         if (!same) return res.json({ error: 'Usuario y o contraseña erroneos (2)' });
+//         res.json({ success: 'Usuario correcto' });
+//     } catch (err) {
+//         res.json({ error: err })
+//     }
+// });
 
 const createToken = (pUser) => {
     const payload = {
