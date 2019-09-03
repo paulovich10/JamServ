@@ -1,0 +1,11 @@
+extends ../layout
+
+block content
+    div
+        a.btn.btn-danger.btn-sm.mr-1(href="/conductores/delete/"+conductor.id, onclick="return confirm('¿Estás seguro?')")
+            i.fa.fa-trash Borrar
+        a.btn.btn-success.btn-sm(href="/conductores/update/"+conductor.id)
+            i.fa.fa-edit Editar
+    h3 Recupero los datos del conductor con id #{conductor.Id}
+    p Nombre: #{conductor.nombre} #{conductor.apellidos}
+    p Email: #{conductor.email}

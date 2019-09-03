@@ -1,0 +1,24 @@
+extends ../layout
+
+block content
+    h2 Nuevo Conductor
+    form(action="/conductores/create", method="POST").mb-5
+        .form-group
+            label(for="nombre") Nombre
+            input.form-control(type="text", name="nombre", value="Rafa")
+        .form-group
+            label(for="apellidos") Apellidos
+            input.form-control(type="text", name="apellidos", value="Fernandez")
+        .form-group
+            label(for="fecha_nacimiento") Fecha nacimiento
+            input.form-control(type="date", name="fecha_nacimiento", value="1980-08-12")
+        .form-group
+            label(for="email") Email
+            input.form-control(type="text", name="email", value="rafa@gmail.com")
+        .form-group
+            label(for="usuario") Usuario
+            input.form-control(type="text", name="usuario", value="rafiki")
+        .form-group
+            label(for="password") Contraseña
+            input.form-control(type="password", name="password", value="9782")
+        input(type="submit", value="Enviar").btn.btn-block.btn-primary

@@ -1,0 +1,34 @@
+extends ../layout
+
+block content
+    h2 Lista de conductores
+    table.table
+        thead
+            tr
+                th id
+                th nombre
+                th apellidos
+                th fecha nacimiento
+                th email
+                th usuario
+                th contraseña
+                th acciones
+        tbody
+            each conductor in conductores
+                tr
+                    td= conductor.id
+                    td= conductor.nombre
+                    td= conductor.apellidos
+                    td= conductor.fecha_nacimiento
+                    td= conductor.email
+                    td= conductor.usuario
+                    td= conductor.password
+                    td
+
+
+                        a.btn.btn-primary.btn-sm.mr-1(href="/conductores/"+conductor.id)
+                            i.fa.fa-eye
+                        a.btn.btn-danger.btn-sm.mr-1(href="/conductores/delete/"+conductor.id, onclick="return confirm('¿Estás seguro?')")
+                            i.fa.fa-trash
+                        a.btn.btn-success.btn-sm(href="/conductores/update/"+conductor.id)
+                            i.fa.fa-edit

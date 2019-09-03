@@ -1,0 +1,27 @@
+extends ../layout
+
+block content
+    h2 Edición del alumno #{conductor.id}
+    form.mb-5(action="/conductores/edit", method="POST")
+        .form-group
+            label(for="nombre") Nombre
+            input.form-control(type="text", name="nombre", value=conductor.nombre)
+        .form-group
+            label(for="apellidos") Apellidos
+            input.form-control(type="text", name="apellidos", value=conductor.apellidos)
+        .form-group
+            label(for="fecha_nacimiento") Fecha nacimiento
+            input.form-control(type="date", name="fecha_nacimiento", value=conductor.fecha_nacimiento)
+        .form-group
+            label(for="email") Email
+            input.form-control(type="text", name="email", value=conductor.email)
+        .form-group
+            label(for="usuario") Usuario
+            input.form-control(type="text", name="usuario", value=conductor.usuario)
+        .form-group
+            label(for="password") Contraseña
+            input.form-control(type="text", name="password", value=conductor.password)
+        
+            
+        input(type="hidden", name="id", value=conductor.id)
+        input(type="submit", value="Enviar").btn.btn-block.btn-primary
