@@ -1,36 +1,11 @@
 let express = require('express');
 let router = express.Router();
 const bcrypt = require('bcrypt');
-const jwt = require('jwt-simple');
 const moment = require('moment');
+const jwt = require('jwt-simple');
+
 
 let usuariosModel = require('../../models/usuarios');
-
-router.post('/registro', async (req, res) => {
-    // usuariosModel.insert(req.body)
-    //     .then(result => {
-    //         console.log(result.insertId)
-    //         usuariosModel.getById(result.insertId)
-    //             .then(usuario => {
-    //                 res.json(usuario)
-    //             })
-    //             .catch(err => {
-    //                 res.json(err)
-    //             })
-    //     })
-    //     .catch(err => {
-    //         res.json(err);
-    //     })
-    req.body.password = bcrypt.hashSync(req.body.password, 10);
-    try {
-        let result = await usuariosModel.insert(req.body);
-        let usuario = await usuariosModel.getById(result.insertId);
-        // res.json(usuario);
-        res.json({ token: createToken(usuario) })
-    } catch (err) {
-        res.json(err);
-    }
-});
 
 router.post('/login', (req, res) => {
     usuariosModel.getByUsername(req.body.usuario)
@@ -39,7 +14,10 @@ router.post('/login', (req, res) => {
             bcrypt.compare(req.body.password, user.password, (err, same) => {
                 if (err) return res.json({ error: 'Error!!!!' })
                 if (!same) return res.json({ error: 'Usuario y o contraseña erroneos (2)' })
-                res.json({ token: createToken(user) })
+                res.json({
+                    token: createToken(user),
+                    username: user.usuario
+                })
             });
         })
         .catch((err) => {
@@ -60,12 +38,15 @@ router.post('/login', (req, res) => {
 // });
 
 const createToken = (pUser) => {
+    //console.log(pUser.id);
+
     const payload = {
         userId: pUser.id,
         createdAt: moment().unix(),
         expiresAt: moment().add(5, 'minutes').unix()
     }
-    return jwt.encode(payload, process.env.SECRET_KEY);
+    return jwt.encode(payload, 'en un lugar de la mancha');
+
 }
 
 module.exports = router;
