@@ -48,7 +48,9 @@ router.post('/registro', async (req, res) => {
 
 
         // res.json(usuario);
-        res.json({ token: createToken(usuario), usuario: usuario });
+        res.json({ 
+            token: createToken(usuario), 
+            usuario: usuario });
 
 
     } catch (err) {

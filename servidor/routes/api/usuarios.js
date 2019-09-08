@@ -18,6 +18,7 @@ router.post('/login', (req, res) => {
                     token: createToken(user),
                     username: user.usuario
                 })
+                //console.log(res.json)
             });
         })
         .catch((err) => {
