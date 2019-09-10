@@ -2,6 +2,7 @@ let express = require('express');
 let router = express.Router();
 const bcrypt = require('bcrypt');
 let modelConductor = require('../../models/conductores');
+let usuariosModel = require('../../models/usuarios');
 const jwt = require('jwt-simple');
 const moment = require('moment');
 
@@ -16,19 +17,23 @@ const moment = require('moment');
 
 // router.use(middlewares.checkUserAuthenticated);
 
-// http://localhost:3000/api/estudiantes
+// http://localhost:3000/api/conductores
 router.get('/', (req, res) => {
     modelConductor.getAllP()
         .then(rows => res.json(rows))
         .catch(err => res.json(err))
 });
 
-// http://localhost:3000/api/estudiantes/7
+
+
+// http://localhost:3000/api/conductores/7
 router.get('/:conductorId', (req, res) => {
     modelConductor.getById(req.params.conductorId)
         .then(conductor => res.json(conductor))
         .catch(err => res.json(err));
 });
+
+
 
 router.post('/', (req, res) => {
     modelConductor.insert(req.body)
@@ -43,14 +48,24 @@ router.post('/registro', async (req, res) => {
     req.body.password = bcrypt.hashSync(req.body.password, 10);
 
     try {
+        let email = await modelConductor.getByEmail(req.body.email)
+        let username = await usuariosModel.getByUsername(req.body.usuario)
+        if (email) {
+            return res.json({ errorEmail: 'El email de usuario ya existe' })
+        } else if (username) {
+
+            return res.json({ errorUsuario: 'El usuario ya existe' })
+        }
+
         let result = await modelConductor.insert(req.body);
         let usuario = await modelConductor.getById(result.insertId);
 
 
         // res.json(usuario);
-        res.json({ 
-            token: createToken(usuario), 
-            usuario: usuario });
+        res.json({
+            token: createToken(usuario),
+            username: usuario.usuario
+        });
 
 
     } catch (err) {
