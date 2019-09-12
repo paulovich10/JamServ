@@ -51,11 +51,14 @@ router.post('/registro', async (req, res) => {
         let email = await modelConductor.getByEmail(req.body.email)
         let username = await usuariosModel.getByUsername(req.body.usuario)
         if (email) {
-            return res.json({ errorEmail: 'El email de usuario ya existe' })
-        } else if (username) {
-
-            return res.json({ errorUsuario: 'El usuario ya existe' })
+            return res.json({ error: 'El email de usuario ya existe' })
         }
+        if (username) {
+            return res.json({ error: 'El usuario ya existe' })
+        }
+
+
+        alert('usuario logado con exito')
 
         let result = await modelConductor.insert(req.body);
         let usuario = await modelConductor.getById(result.insertId);
@@ -75,10 +78,34 @@ router.post('/registro', async (req, res) => {
 
 
 
-router.put('/', (req, res) => {
-    modelConductor.update(req.body.id, req.body)
-        .then(result => res.json(result))
-        .catch(err => res.json(err));
+
+
+
+router.put('/update/:userId', async (req, res) => {
+    modelConductor.update(req.params.userId, req.body)
+    req.body.password = bcrypt.hashSync(req.body.password, 10);
+    let payload = null;
+
+    try {
+        payload = jwt.decode(token, process.env.SECRET_KEY);
+    } catch (err) {
+        return res.json({ error: 'Existe un error con el token. No es posible decodificar' })
+    }
+
+    console.log(payload);
+    // Compruebo si el id del usuario existe en mi Base de Datos
+    let usuario = await usuariosModel.getById(payload.userId)
+    if (!usuario) {
+        return res.json({ error: 'Existe un error con el token. No existe el usuario en la BD' })
+    }
+
+    // Compruebo si la fecha de expiración está caducada
+    if (payload.expiresAt < moment().unix()) {
+        return res.json({ error: 'Existe un error con el token. Está caducado' })
+    }
+
+    res.json(usuario)
+
 });
 
 router.delete('/', (req, res) => {

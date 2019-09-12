@@ -5,7 +5,6 @@ const moment = require('moment');
 const jwt = require('jwt-simple');
 
 let usuariosModel = require('../../models/usuarios');
-let modelConductor = require('../../models/conductores');
 
 
 router.post('/login', (req, res) => {
@@ -29,7 +28,7 @@ router.post('/login', (req, res) => {
 });
 
 
-router.post('/profile', async (req, res) => {
+router.get('/profile', async (req, res) => {
     if (!req.headers['autorizacion']) {
 
         return res.json({ error: 'Hay un error en el token. No hay' }

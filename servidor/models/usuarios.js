@@ -1,13 +1,6 @@
 const db = require('../db');
 
-const update = ({ nombre, apellidos, fecha_nacimiento, usuario, email, password }) => {
-    return new Promise((resolve, reject) => {
-        db.get().query('insert into usuarios (nombre, apellidos, fecha_nacimiento, usuario, email, password) values (?, ?, ?, ?, ?,?)', [nombre, apellidos, fecha_nacimiento, usuario, email, password], (err, result) => {
-            if (err) reject(err);
-            resolve(result);
-        })
-    })
-}
+
 
 const getById = (pId) => {
     return new Promise((resolve, reject) => {
@@ -28,10 +21,9 @@ const getByUsername = (pUsername) => {
     })
 }
 
-
-
 module.exports = {
     // insert: insert,
     getById: getById,
     getByUsername: getByUsername
+
 }
