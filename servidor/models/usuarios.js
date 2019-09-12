@@ -20,10 +20,19 @@ const getByUsername = (pUsername) => {
         })
     })
 }
+const update = (pId, { nombre, apellidos, fecha_nacimiento, email, usuario, password }) => {
+    return new Promise((resolve, reject) => {
+        db.get().query('update usuarios set nombre = ?, apellidos = ?, fecha_nacimiento = ?, email = ?, usuario = ? where id = ?', [nombre, apellidos, fecha_nacimiento, email, usuario, pId], (err, result) => {
+            if (err) reject(err);
+            resolve(result);
+        });
+    })
+}
 
 module.exports = {
     // insert: insert,
     getById: getById,
-    getByUsername: getByUsername
+    getByUsername: getByUsername,
+    update: update
 
 }

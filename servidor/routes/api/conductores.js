@@ -78,36 +78,6 @@ router.post('/registro', async (req, res) => {
 
 
 
-
-
-
-router.put('/update/:userId', async (req, res) => {
-    modelConductor.update(req.params.userId, req.body)
-    req.body.password = bcrypt.hashSync(req.body.password, 10);
-    let payload = null;
-
-    try {
-        payload = jwt.decode(token, process.env.SECRET_KEY);
-    } catch (err) {
-        return res.json({ error: 'Existe un error con el token. No es posible decodificar' })
-    }
-
-    console.log(payload);
-    // Compruebo si el id del usuario existe en mi Base de Datos
-    let usuario = await usuariosModel.getById(payload.userId)
-    if (!usuario) {
-        return res.json({ error: 'Existe un error con el token. No existe el usuario en la BD' })
-    }
-
-    // Compruebo si la fecha de expiración está caducada
-    if (payload.expiresAt < moment().unix()) {
-        return res.json({ error: 'Existe un error con el token. Está caducado' })
-    }
-
-    res.json(usuario)
-
-});
-
 router.delete('/', (req, res) => {
     modelConductor.deleteById(req.body.id)
         .then(result => res.json(result))

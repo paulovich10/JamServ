@@ -46,14 +46,7 @@ const deleteById = (pId) => {
         });
     });
 }
-const update = (pId, { nombre, apellidos, fecha_nacimiento, email, usuario, password }) => {
-    return new Promise((resolve, reject) => {
-        db.get().query('update usuarios set nombre = ?, apellidos = ?, fecha_nacimiento = ?, email = ?, usuario = ?, password = ? where id = ?', [nombre, apellidos, fecha_nacimiento, email, usuario, password, pId], (err, result) => {
-            if (err) reject(err);
-            resolve(result);
-        });
-    })
-}
+
 
 module.exports = {
 
@@ -61,7 +54,6 @@ module.exports = {
     insert: insert,
     getById: getById,
     deleteById: deleteById,
-    update: update,
     getByEmail: getByEmail
 
 }

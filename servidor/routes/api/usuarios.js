@@ -46,7 +46,7 @@ router.get('/profile', async (req, res) => {
         return res.json({ error: 'Existe un error con el token. No es posible decodificar' })
     }
 
-    console.log(payload);
+    //console.log(payload);
     // Compruebo si el id del usuario existe en mi Base de Datos
     let usuario = await usuariosModel.getById(payload.userId)
     if (!usuario) {
@@ -62,17 +62,7 @@ router.get('/profile', async (req, res) => {
 
 });
 
-// router.post('/loginv2', async (req, res) => {
-//     try {
-//         let user = await usuariosModel.getByUsername(req.body.username);
-//         if (user == null) return res.json({ error: 'Usuario y o contraseña erroneos (1)' });
-//         let same = bcrypt.compareSync(req.body.password, user.password);
-//         if (!same) return res.json({ error: 'Usuario y o contraseña erroneos (2)' });
-//         res.json({ success: 'Usuario correcto' });
-//     } catch (err) {
-//         res.json({ error: err })
-//     }
-// });
+
 
 const createToken = (pUser) => {
     //console.log(pUser.id);
@@ -85,5 +75,29 @@ const createToken = (pUser) => {
     return jwt.encode(payload, 'en un lugar de la mancha');
 
 }
+
+router.put('/update', async (req, res) => {
+
+    if (!req.headers['autorizacion']) {
+
+        return res.json({ error: 'hay un error en el token, no hay' });
+
+    }
+
+    let token = req.headers['autorizacion'];
+    let payload = null;
+
+    try {
+        payload = jwt.decode(token, process.env.SECRET_KEY)
+    } catch (err) {
+        console.log(err);
+        return res.json({ error: 'Hay un error con el token, no es posible decodificar' })
+    }
+    //res.send(payload);
+    let response = await usuariosModel.update(payload.userId, req.body);
+    console.log(response);
+    res.send(response)
+
+});
 
 module.exports = router;
