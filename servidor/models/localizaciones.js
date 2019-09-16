@@ -18,9 +18,9 @@ const getByIdLoc = (pId) => {
     })
 }
 
-const updateLoc = (pId, { direccion, latitud, longitud, cp }) => {
+const updateLoc = (pId, { latitud, longitud }) => {
     return new Promise((resolve, reject) => {
-        db.get().query('update localizaciones set direccion = ?, latitud = ?, longitud = ?, cp = ? where id = ?', [direccion, latitud, longitud, cp], (err, result) => {
+        db.get().query('update localizaciones set latitud = ?, longitud = ? where id = ?', [latitud, longitud], (err, result) => {
             if (err) reject(err);
             resolve(result);
         });
