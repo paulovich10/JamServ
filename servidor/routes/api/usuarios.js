@@ -15,7 +15,7 @@ router.post('/login', (req, res) => {
             bcrypt.compare(req.body.password, user.password, (err, same) => {
                 if (err) return res.json({ error: 'Error!!!!' })
                 if (!same) return res.json({ error: 'Usuario y o contraseña erroneos (2)' })
-                console.log(user)
+                //console.log(user)
                 res.json({
                     token: createToken(user),
                     username: user.usuario
@@ -49,49 +49,66 @@ router.get('/profile', async (req, res) => {
         return res.json({ error: 'Existe un error con el token. No es posible decodificar' })
     }
 
-    //console.log(payload);
-    // Compruebo si el id del usuario existe en mi Base de Datos
-    let usuario = await usuariosModel.getById(payload.userId)
-    if (!usuario) {
-        return res.json({ error: 'Existe un error con el token. No existe el usuario en la BD' })
-    }
-
     // Compruebo si la fecha de expiración está caducada
     if (payload.expiresAt < moment().unix()) {
         return res.json({ error: 'Existe un error con el token. Está caducado' })
     }
 
-    res.json(usuario)
+    //console.log(payload);
+    // Compruebo si el id del usuario existe en mi Base de Datos
+    let resultado = await usuariosModel.getById(payload.userId)
+
+
+    // Recuperamos la información del perfil del usuario y lo metemos dentro del objeto llamado respuesta (este objeto es el que utilizamos para devolver la información a Angular)
+    let respuesta = { ...resultado[0][0] }
+    respuesta.origen = { ...resultado[1][0] };
+    respuesta.destino = { ...resultado[1][1] };
+
+    res.json(respuesta)
+    console.log(respuesta)
 
 });
 
-router.post('/profile/localizacion', async (req, res) => {
-    console.log('Paula', req.body.origen.latitud)
+router.get('/mapa', (req, res) => {
 
+    usuariosModel.getAll()
+        //creamos un array para meterle los ids de los origenes y junto con las localizaciones de ese array mostrarlo en el mapa 
+        .then(rows => {
+            let arr = new Array();
+            let arrTotal = new Array();
+            //creamos dos arrays arrTotal y arr. Al hacer el bucle de abajo pasa antes por la query de donde extraigo los ids de las partidas  
+            for (row of rows) {
+                arr.push(row['fk_partida']);
+                arrTotal.push({ usuario: row['usuario'], email: row['email'] });
+            }
+
+            usuariosModel.getAllPartida(arr)
+                .then(rows => {
+                    for (let i = 0; i < arr.length; i++) {
+                        arrTotal[i].partida = rows[i];
+                    }
+                    res.json(arrTotal);
+                })
+
+        })
+
+
+        .catch(err => res.json(err))
+
+})
+
+router.post('/profile/localizacion', async (req, res) => {
+    console.log(req.body)
     try {
         let origen = {
-            latitud: req.body.origen.latitud,
-            longitud: req.body.origen.longitud
+            latitud: req.body.origenlat,
+            longitud: req.body.origenlong
         }
         let destino = {
-            latitud: req.body.destino.latitud,
-            longitud: req.body.destino.longitud
+            latitud: req.body.destinolat,
+            longitud: req.body.destinolong
         }
 
-        //saco los ids del origen y del destino para meterlos en la tabla de usuario
-        let response = await localizacionesModel.insertLoc(origen);
-        let response2 = await localizacionesModel.insertLoc(destino);
-
-        console.log('id', response.insertId);
-        console.log('id2', response2.insertId)
-
-        if (!req.headers['autorizacion']) {
-
-            return res.json({ error: 'Hay un error en el token. No hay' }
-
-            )
-
-        }
         let token = req.headers['autorizacion'];
         console.log('cabeceras', req.headers);
 
@@ -100,6 +117,22 @@ router.post('/profile/localizacion', async (req, res) => {
         } catch (err) {
             return res.json({ error: 'Existe un error con el token. No es posible decodificar' })
         }
+
+        //saco los ids del origen y del destino para meterlos en la tabla de usuario
+        let response = await localizacionesModel.insertLoc(origen.latitud, origen.longitud, payload.userId);
+        let response2 = await localizacionesModel.insertLoc(destino.latitud, destino.longitud, payload.userId);
+
+        // console.log('id', response.insertId);
+        // console.log('id2', response2.insertId)
+
+        if (!req.headers['autorizacion']) {
+
+            return res.json({ error: 'Hay un error en el token. No hay' }
+
+            )
+
+        }
+
 
         //console.log(payload)
 

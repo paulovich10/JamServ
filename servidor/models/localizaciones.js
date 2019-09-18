@@ -27,12 +27,12 @@ const updateLoc = (pId, { latitud, longitud }) => {
     })
 }
 
-const insertLoc = ({ latitud, longitud }) => {
+const insertLoc = (latitud, longitud, id_usuario) => {
 
     return new Promise((resolve, reject) => {
         console.log(latitud, longitud)
-        let q = 'insert into localizaciones (latitud, longitud) values (?, ?)';
-        db.get().query(q, [latitud, longitud], (err, result) => {
+        let q = 'insert into localizaciones (latitud, longitud, id_usuario) values (?, ?, ?)';
+        db.get().query(q, [latitud, longitud, id_usuario], (err, result) => {
             if (err) reject(err)
             resolve(result)
             console.log(result)

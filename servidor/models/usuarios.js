@@ -1,12 +1,36 @@
 const db = require('../db');
 
+const getAll = () => {
+    return new Promise((resolve, reject) => {
+        db.get().query('select usuarios.fk_partida, usuarios.email, usuarios.usuario from usuarios where usuarios.fk_partida is not null',
+            (err, rows) => {
+                if (err) reject(err)
+                resolve(rows)
+            })
+    })
+}
+
+
+const getAllPartida = (fkPartidaIds) => {
+
+    console.log('ARRAY!!', fkPartidaIds);
+    return new Promise((resolve, reject) => {
+
+        db.get().query('select * from localizaciones where id in (?)', [fkPartidaIds], (err, rows) => {
+            if (err) reject(err)
+            resolve(rows)
+        })
+    })
+}
+
 
 
 const getById = (pId) => {
     return new Promise((resolve, reject) => {
-        db.get().query('select usuarios.* ,localizaciones.`latitud`, localizaciones.`longitud` from usuarios, localizaciones where usuarios.id = ? AND (usuarios.fk_partida = localizaciones.id OR usuarios.fk_destino = localizaciones.id )', [pId], (err, rows) => {
+        db.get().query('select * from usuarios where usuarios.id = ?; select * from localizaciones where localizaciones.id_usuario = ?', [pId, pId], (err, rows) => {
+            console.log(rows)
             if (err) reject(err)
-            rows.length == 2 ? resolve(rows[0], rows[1]) : resolve(null)
+            resolve(rows)
         })
     })
 }
@@ -41,10 +65,11 @@ const updateLoc = (pId, { fk_partida, fk_destino }) => {
 }
 
 module.exports = {
-    // insert: insert,
+    getAll: getAll,
     getById: getById,
     getByUsername: getByUsername,
     update: update,
-    updateLoc: updateLoc
+    updateLoc: updateLoc,
+    getAllPartida: getAllPartida
 
 }

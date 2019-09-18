@@ -8,7 +8,8 @@ const connect = (done) => {
         user: 'root',
         password: 'root',
         database: 'Jamdb',
-        port: 8889
+        port: 8889,
+        multipleStatements: true
     })
     done();
 }

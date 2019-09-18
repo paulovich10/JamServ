@@ -1,14 +1,7 @@
 const db = require('../db');
 
 // Recupera todos los estudiantes a través de una promesa
-const getAllP = () => {
-    return new Promise((resolve, reject) => {
-        db.get().query('select * from usuarios', (err, rows) => {
-            if (err) reject(err)
-            resolve(rows)
-        })
-    })
-}
+
 
 const insert = ({ nombre, apellidos, fecha_nacimiento, email, usuario, password }) => {
     return new Promise((resolve, reject) => {
@@ -50,7 +43,6 @@ const deleteById = (pId) => {
 
 module.exports = {
 
-    getAllP: getAllP,
     insert: insert,
     getById: getById,
     deleteById: deleteById,

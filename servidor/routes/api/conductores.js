@@ -57,12 +57,14 @@ router.post('/registro', async (req, res) => {
             return res.json({ error: 'El usuario ya existe' })
         }
 
-
-        alert('usuario logado con exito')
-
-        let result = await modelConductor.insert(req.body);
-        let usuario = await modelConductor.getById(result.insertId);
-
+        let result = null;
+        let usuario = null;
+        try {
+            result = await modelConductor.insert(req.body);
+            usuario = await modelConductor.getById(result.insertId);
+        } catch (err) {
+            console.log(err);
+        }
 
         // res.json(usuario);
         res.json({
