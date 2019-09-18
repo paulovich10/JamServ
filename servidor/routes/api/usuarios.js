@@ -92,6 +92,7 @@ router.get('/mapa', (req, res) => {
                 arrTotal[i].destino = rowsLocDestino[i];
             }
             res.json(arrTotal);
+            console.log(arrTotal)
 
         })
 
