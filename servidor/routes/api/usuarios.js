@@ -73,22 +73,25 @@ router.get('/mapa', (req, res) => {
 
     usuariosModel.getAll()
         //creamos un array para meterle los ids de los origenes y junto con las localizaciones de ese array mostrarlo en el mapa 
-        .then(rows => {
+        .then(async rows => {
             let arr = new Array();
+            let arrDestino = new Array();
             let arrTotal = new Array();
             //creamos dos arrays arrTotal y arr. Al hacer el bucle de abajo pasa antes por la query de donde extraigo los ids de las partidas  
             for (row of rows) {
                 arr.push(row['fk_partida']);
+                arrDestino.push(row['fk_destino']);
                 arrTotal.push({ usuario: row['usuario'], email: row['email'] });
             }
 
-            usuariosModel.getAllPartida(arr)
-                .then(rows => {
-                    for (let i = 0; i < arr.length; i++) {
-                        arrTotal[i].partida = rows[i];
-                    }
-                    res.json(arrTotal);
-                })
+            let rowsLocOrigen = await usuariosModel.getAllPartida(arr)
+            let rowsLocDestino = await usuariosModel.getAllPartida(arrDestino)
+
+            for (let i = 0; i < arr.length; i++) {
+                arrTotal[i].partida = rowsLocOrigen[i];
+                arrTotal[i].destino = rowsLocDestino[i];
+            }
+            res.json(arrTotal);
 
         })
 

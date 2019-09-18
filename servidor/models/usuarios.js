@@ -2,7 +2,7 @@ const db = require('../db');
 
 const getAll = () => {
     return new Promise((resolve, reject) => {
-        db.get().query('select usuarios.fk_partida, usuarios.email, usuarios.usuario from usuarios where usuarios.fk_partida is not null',
+        db.get().query('select usuarios.fk_partida, fk_destino, usuarios.email, usuarios.usuario from usuarios where usuarios.fk_partida AND usuarios.fk_destino is not null',
             (err, rows) => {
                 if (err) reject(err)
                 resolve(rows)
