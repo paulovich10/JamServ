@@ -1,6 +1,6 @@
 const db = require('../db');
 
-// Recupera todos los estudiantes a través de una promesa
+
 
 
 const insert = ({ nombre, apellidos, fecha_nacimiento, email, usuario, password }) => {
