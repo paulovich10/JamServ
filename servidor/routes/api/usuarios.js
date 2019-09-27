@@ -87,12 +87,13 @@ router.get('/mapa', (req, res) => {
             let rowsLocOrigen = await usuariosModel.getAllPartida(arr)
             let rowsLocDestino = await usuariosModel.getAllPartida(arrDestino)
 
-            for (let i = 0; i < arr.length; i++) {
+            console.log(arrTotal)
+            for (let i = 0; i < arrTotal.length; i++) {
                 arrTotal[i].partida = rowsLocOrigen[i];
                 arrTotal[i].destino = rowsLocDestino[i];
             }
             res.json(arrTotal);
-            console.log(arrTotal)
+            // console.log(arrTotal)
 
         })
 
