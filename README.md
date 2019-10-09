@@ -6,13 +6,12 @@ Proyecto que da de alta ususarios que quieren encontrar conductores cerca de su 
 así como ahorrar en combustible y contaminación.
 
 Realizada enteramente con JS, Node.js y Express, esta parte del proyecto de JamOut, almacena y modifica los usuarios dados de alta en la base de datos 
-relacionales MySQL mediante la generacion de los modelos ususario, conductor y localizaciones. Enrutamiento de la api para ar respuesta a las peticiones 
-generadas en la parte de cliente realizado con angular y subido a firebase.
+relacionales MySQL mediante la generacion de los modelos ususario, conductor y localizaciones. Enrutamiento de la api para dar respuesta a las peticiones 
+generadas en la parte de cliente realizado con Angular y subido a Firebase.
 
 ## Comenzando 🚀
 Para instalar la aplicación no necesitas nada más que hace npm install en tu consola habiendo antes entrado en el proyecto, si ya tienes instalado node. Como no se encuentra en ningún servidor
-debes tener un servidor local lavantado tal como MAMP y poner como url localhost:8889 si usas Mac.
-
+debes tener un servidor local lavantado tal como MAMP.
 
 
 ### Instalación 🔧
