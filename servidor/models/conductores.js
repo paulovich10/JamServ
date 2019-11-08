@@ -1,8 +1,5 @@
 const db = require('../db');
 
-
-
-
 const insert = ({ nombre, apellidos, fecha_nacimiento, email, usuario, password }) => {
     return new Promise((resolve, reject) => {
         let q = 'insert into usuarios (nombre, apellidos, fecha_nacimiento, email, usuario, password) values (?, ?, ?, ?, ?, ?)';
